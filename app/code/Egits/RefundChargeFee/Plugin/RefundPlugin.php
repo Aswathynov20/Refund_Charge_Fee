@@ -3,7 +3,7 @@
 namespace Egits\RefundChargeFee\Plugin;
 
 use Magento\Framework\App\RequestInterface;
-use Magento\Sales\Controller\Adminhtml\Order\Creditmemo\Save as CreditmemoSaveController;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class RefundPlugin
 {
@@ -13,13 +13,22 @@ class RefundPlugin
     protected $request;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
      * RefundPlugin constructor.
+     *
      * @param RequestInterface $request
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        RequestInterface $request
+        RequestInterface $request,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->request = $request;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -35,11 +44,26 @@ class RefundPlugin
         \Magento\Sales\Api\Data\CreditmemoInterface $creditmemo,
         $offlineRequested = false
     ) {
+        $isModuleActive = (int) $this->scopeConfig->getValue('refundfee/general/enabled');
 
-        $newGrandTotal = $creditmemo->getBaseGrandTotal() - 10;
-        $creditmemo->setBaseGrandTotal($newGrandTotal);
+        if ($isModuleActive) {
 
+            $refundFee = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
+            $refundAgeThreshold = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/age_threshold');
 
-        return [$creditmemo, $offlineRequested];
+            $baseGrandTotal = $creditmemo->getBaseGrandTotal();
+
+            $refundFeePercentage = $refundFee / 100;
+
+            $feeAmount = $baseGrandTotal * $refundFeePercentage;
+
+            $newTotal = $baseGrandTotal - $feeAmount;
+
+            $creditmemo->setBaseGrandTotal($feeAmount);
+
+            return [$creditmemo, $offlineRequested];
+        } else {
+            return [$creditmemo, $offlineRequested];
+        }
     }
 }
