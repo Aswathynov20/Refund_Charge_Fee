@@ -1,0 +1,8 @@
+.admin__field-control {
+    display: flex;
+    align-items: center;
+}
+
+.admin__control-checkbox input[type="checkbox"] {
+    margin-right: 5px; /* Adjust as needed */
+}
