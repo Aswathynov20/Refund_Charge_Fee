@@ -107,14 +107,12 @@ $commentText = $block->getCreditmemo()->getCommentText();
         <div class="admin__page-section-item order-totals creditmemo-totals">
             <div class="admin__page-section-item-title">
                 <span class="title"><?= $block->escapeHtml(__('Refund Totals')) ?></span>
-                
             </div>
             
             <?= $block->getChildHtml('creditmemo_totals') ?>
-            <div class="totals-actions"><?= /* @noEscape */ $viewModel->getUpdateTotalsButton() ?></div>
-
             <input type="checkbox" name="refund_fee_enabled" id="refund_fee_enabled" value="1" checked="checked" />
                 <label for="refund_fee_enabled"><?= __('Apply Refund Fee') ?></label>
+            <div class="totals-actions"><?= /* @noEscape */ $viewModel->getUpdateTotalsButton() ?></div>
             <div class="order-totals-actions">
                 <div class="field choice admin__field admin__field-option field-append-comments">
                     <input id="notify_customer"
@@ -126,13 +124,9 @@ $commentText = $block->getCreditmemo()->getCommentText();
                     <label for="notify_customer" class="admin__field-label">
                         <span><?= $block->escapeHtml(__('Append Comments')) ?></span>
                     </label>
-
                 </div>
-                
                 <?php if ($block->canSendCreditmemoEmail()):?>
-                  
                 <div class="field choice admin__field admin__field-option field-email-copy">
-                
                     <input id="send_email"
                            class="admin__control-checkbox"
                            name="creditmemo[send_email]"
