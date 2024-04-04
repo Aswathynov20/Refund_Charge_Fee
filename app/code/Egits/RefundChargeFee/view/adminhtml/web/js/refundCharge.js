@@ -14,6 +14,7 @@ require(["jquery", "mage/validation"], function ($) {
                 $.ajax({
                     url: "/admin/refund_fee/refundCalculate",
                     type: "POST",
+                    dataType: "json",
                     data: {
                         value: value,
                     },

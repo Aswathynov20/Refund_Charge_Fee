@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Egits\RefundChargeFee\Controller;
+namespace Egits\RefundChargeFee\Controller\Adminhtml;
 
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
@@ -19,7 +19,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Message\ManagerInterface;
 
-class refundCalculate implements HttpPostActionInterface
+class RefundCalculate implements HttpPostActionInterface
 {
 
     /**
@@ -92,8 +92,6 @@ class refundCalculate implements HttpPostActionInterface
 
         if ($isModuleActive) {
             if ($isRefundable) {
-
-
 
                 $response = [
                     'success' => true,

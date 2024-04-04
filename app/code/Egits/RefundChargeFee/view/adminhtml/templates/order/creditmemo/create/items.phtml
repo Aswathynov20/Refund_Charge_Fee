@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -21,7 +22,7 @@ $commentText = $block->getCreditmemo()->getCommentText();
         <span class="title"><?= $block->escapeHtml(__('Items to Refund')) ?></span>
     </div>
 
-    <?php if (count($_items)): ?>
+    <?php if (count($_items)) : ?>
     <div class="admin__table-wrapper">
         <table class="data-table admin__table-primary order-creditmemo-tables">
             <thead>
@@ -29,7 +30,7 @@ $commentText = $block->getCreditmemo()->getCommentText();
                     <th class="col-product"><span><?= $block->escapeHtml(__('Product')) ?></span></th>
                     <th class="col-price"><span><?= $block->escapeHtml(__('Price')) ?></span></th>
                     <th class="col-ordered-qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></th>
-                    <?php if ($block->canReturnToStock()): ?>
+                    <?php if ($block->canReturnToStock()) : ?>
                     <th class="col-return-to-stock"><span><?= $block->escapeHtml(__('Return to Stock')) ?></span></th>
                     <?php endif; ?>
                     <th class="col-refund"><span><?= $block->escapeHtml(__('Qty to Refund')) ?></span></th>
@@ -40,7 +41,7 @@ $commentText = $block->getCreditmemo()->getCommentText();
 
                 </tr>
             </thead>
-            <?php if ($block->canEditQty()): ?>
+            <?php if ($block->canEditQty()) : ?>
             <tfoot>
                 <tr>
                     <td colspan="4">&nbsp;</td>
@@ -51,20 +52,21 @@ $commentText = $block->getCreditmemo()->getCommentText();
                 </tr>
             </tfoot>
             <?php endif; ?>
-            <?php $i = 0; foreach ($_items as $_item): ?>
-                <?php if ($_item->getOrderItem()->getParentItem()):
-                    continue;
-                else:
-                    $i++;
-                endif; ?>
-                <tbody class="<?= /* @noEscape */ $i%2 ? 'even' : 'odd' ?>">
-                    <?= $block->getItemHtml($_item) ?>
-                    <?= $block->getItemExtraInfoHtml($_item->getOrderItem()) ?>
-                </tbody>
+            <?php $i = 0;
+                foreach ($_items as $_item) : ?>
+            <?php if ($_item->getOrderItem()->getParentItem()) :
+                        continue;
+                    else :
+                        $i++;
+                    endif; ?>
+            <tbody class="<?= /* @noEscape */ $i % 2 ? 'even' : 'odd' ?>">
+                <?= $block->getItemHtml($_item) ?>
+                <?= $block->getItemExtraInfoHtml($_item->getOrderItem()) ?>
+            </tbody>
             <?php endforeach; ?>
         </table>
     </div>
-    <?php else: ?>
+    <?php else : ?>
     <div class="no-items">
         <?= $block->escapeHtml(__('No Items To Refund')) ?>
     </div>
@@ -73,7 +75,7 @@ $commentText = $block->getCreditmemo()->getCommentText();
 
 <?php $orderTotalBar = $block->getChildHtml('order_totalbar'); ?>
 
-<?php if (!empty($orderTotalBar)): ?>
+<?php if (!empty($orderTotalBar)) : ?>
 <section class="fieldset-wrapper">
     <?= /* @noEscape */ $orderTotalBar ?>
 </section>
@@ -91,15 +93,12 @@ $commentText = $block->getCreditmemo()->getCommentText();
             </div>
             <div id="history_form" class="admin__fieldset-wrapper-content">
                 <div class="admin__field">
-                    <label class="normal admin__field-label"
-                           for="creditmemo_comment_text">
+                    <label class="normal admin__field-label" for="creditmemo_comment_text">
                         <span><?= $block->escapeHtml(__('Comment Text')) ?></span></label>
                     <div class="admin__field-control">
-                        <textarea id="creditmemo_comment_text"
-                                  class="admin__control-textarea"
-                                  name="creditmemo[comment_text]"
-                                  rows="3"
-                                  cols="5"><?= $block->escapeHtml($commentText) ?></textarea>
+                        <textarea id="creditmemo_comment_text" class="admin__control-textarea"
+                            name="creditmemo[comment_text]" rows="3"
+                            cols="5"><?= $block->escapeHtml($commentText) ?></textarea>
                     </div>
                 </div>
             </div>
@@ -108,28 +107,24 @@ $commentText = $block->getCreditmemo()->getCommentText();
             <div class="admin__page-section-item-title">
                 <span class="title"><?= $block->escapeHtml(__('Refund Totals')) ?></span>
             </div>
-            
+
             <?= $block->getChildHtml('creditmemo_totals') ?>
+            <input type="checkbox" name="refund_fee_enabled" id="refund_fee_enabled" value="1" checked="checked" />
+            <label for="refund_fee_enabled"><?= __('Apply Refund Fee') ?></label>
             <div class="totals-actions"><?= /* @noEscape */ $viewModel->getUpdateTotalsButton() ?></div>
             <div class="order-totals-actions">
                 <div class="field choice admin__field admin__field-option field-append-comments">
-                    <input id="notify_customer"
-                           class="admin__control-checkbox"
-                           name="creditmemo[comment_customer_notify]"
-                           value="1"
-                           type="checkbox" />
-                           
+                    <input id="notify_customer" class="admin__control-checkbox"
+                        name="creditmemo[comment_customer_notify]" value="1" type="checkbox" />
+
                     <label for="notify_customer" class="admin__field-label">
                         <span><?= $block->escapeHtml(__('Append Comments')) ?></span>
                     </label>
                 </div>
-                <?php if ($block->canSendCreditmemoEmail()):?>
+                <?php if ($block->canSendCreditmemoEmail()) : ?>
                 <div class="field choice admin__field admin__field-option field-email-copy">
-                    <input id="send_email"
-                           class="admin__control-checkbox"
-                           name="creditmemo[send_email]"
-                           value="1"
-                           type="checkbox" />
+                    <input id="send_email" class="admin__control-checkbox" name="creditmemo[send_email]" value="1"
+                        type="checkbox" />
                     <label for="send_email" class="admin__field-label">
                         <span><?= $block->escapeHtml(__('Email Copy of Credit Memo')) ?></span>
                     </label>
