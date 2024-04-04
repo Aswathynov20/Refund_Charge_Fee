@@ -12,7 +12,7 @@ require(["jquery", "mage/validation"], function ($) {
                 console.log("Checkbox is checked and value is 1.");
 
                 $.ajax({
-                    url: "/admin/refund_fee/refundCalculate",
+                    url: "/admin/refund_fee/refund/refundCalculate", // Corrected URL
                     type: "POST",
                     dataType: "json",
                     data: {
