@@ -5,7 +5,7 @@ namespace Egits\RefundChargeFee\Plugin;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
-class RefundPlugin
+class RefundOperationPlugin
 {
     /**
      * @var RequestInterface
@@ -32,17 +32,16 @@ class RefundPlugin
     }
 
     /**
-     * Modify the $creditmemo parameter before the refund method is executed.
+     * After plugin for the authenticate method.
      *
-     * @param \Magento\Sales\Model\Service\CreditmemoService $subject
-     * @param \Magento\Sales\Api\Data\CreditmemoInterface $creditmemo
-     * @param bool $offlineRequested
-     * @return array
+     * @param \Magento\Customer\Model\Authentication $subject
+     * @param \Magento\Customer\Model\Customer $result
+     * @return \Magento\Customer\Model\Customer
+     * @throws \Exception
      */
-    public function beforeRefund(
-        \Magento\Sales\Model\Service\CreditmemoService $subject,
-        \Magento\Sales\Api\Data\CreditmemoInterface $creditmemo,
-        $offlineRequested = false
+    public function afterExecute(
+        \Magento\Sales\Model\Order\Creditmemo\RefundOperation $subject,
+        $result
     ) {
         $isModuleActive = (int) $this->scopeConfig->getValue('refundfee/general/enabled');
 
@@ -51,19 +50,16 @@ class RefundPlugin
             $refundFee = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
             $refundAgeThreshold = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/age_threshold');
 
-            $baseGrandTotal = $creditmemo->getBaseGrandTotal();
+            $total = (string) ($result->getBaseGrandTotal() - 10);
+            var_dump($total);
 
-            $refundFeePercentage = $refundFee / 100;
+            $result->setTotalRefunded($total);
 
-            $feeAmount = $baseGrandTotal * $refundFeePercentage;
+            $result->getTotalRefunded();
 
-            $newTotal = $baseGrandTotal - $feeAmount;
-
-            $creditmemo->setBaseGrandTotal($feeAmount);
-
-            return [$creditmemo, $offlineRequested];
+            return $result;
         } else {
-            return [$creditmemo, $offlineRequested];
+            return $result;
         }
     }
 }
