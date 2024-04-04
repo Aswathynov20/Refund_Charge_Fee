@@ -110,8 +110,6 @@ $commentText = $block->getCreditmemo()->getCommentText();
             </div>
             
             <?= $block->getChildHtml('creditmemo_totals') ?>
-            <input type="checkbox" name="refund_fee_enabled" id="refund_fee_enabled" value="1" checked="checked" />
-                <label for="refund_fee_enabled"><?= __('Apply Refund Fee') ?></label>
             <div class="totals-actions"><?= /* @noEscape */ $viewModel->getUpdateTotalsButton() ?></div>
             <div class="order-totals-actions">
                 <div class="field choice admin__field admin__field-option field-append-comments">
