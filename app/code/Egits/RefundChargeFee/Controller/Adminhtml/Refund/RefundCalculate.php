@@ -19,7 +19,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Message\ManagerInterface;
 
-class RefundCalculate implements HttpPostActionInterface
+class RefundCalculate extends \Magento\Backend\App\Action implements HttpPostActionInterface
 {
 
     /**
@@ -65,6 +65,7 @@ class RefundCalculate implements HttpPostActionInterface
      * @param ManagerInterface $messageManager
      */
     public function __construct(
+        \Magento\Backend\App\Action\Context $context,
         LoggerInterface $logger,
         RequestInterface $request,
         Http $http,
@@ -72,6 +73,7 @@ class RefundCalculate implements HttpPostActionInterface
         ScopeConfigInterface $scopeConfig,
         ManagerInterface $messageManager
     ) {
+        parent::__construct($context);
         $this->logger = $logger;
         $this->request = $request;
         $this->http = $http;
