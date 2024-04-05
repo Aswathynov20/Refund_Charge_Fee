@@ -17,16 +17,6 @@ $_items = $itemsToRenderViewModel->getItems();
 $commentText = $block->getCreditmemo()->getCommentText();
 ?>
 
-<script>
-    require([
-        "prototype"
-    ], function() {
-        Url = '<?=
-                /** @noEscape */
-                $block->getBaseUrl() . '/admin/refund_fee/refund/refundcalculate' ?>';
-    });
-</script>
-
 <section class="admin__page-section">
     <div class="admin__page-section-title">
         <span class="title"><?= $block->escapeHtml(__('Items to Refund')) ?></span>

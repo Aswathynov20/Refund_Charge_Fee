@@ -1,7 +1,7 @@
 require(["jquery", "mage/validation", "mage/url"], function (
     $,
     validation,
-    url
+    urlBuilder
 ) {
     $(document).ready(function () {
         console.log("Document ready!");
@@ -15,9 +15,9 @@ require(["jquery", "mage/validation", "mage/url"], function (
             if (isChecked && value === "1") {
                 console.log("Checkbox is checked and value is 1.");
 
-                var linkUrl = url.build(
-                    "/admin/refund_fee/refund/refundcalculate"
-                );
+                var linkUrl = urlBuilder.build("refund_charge/calculate"); // Adjust URL generation
+                console.log(linkUrl);
+                // var linkUrl = "refund_charge/calculate";
                 var formKey = $('[name="form_key"]').val();
 
                 // Send AJAX request
