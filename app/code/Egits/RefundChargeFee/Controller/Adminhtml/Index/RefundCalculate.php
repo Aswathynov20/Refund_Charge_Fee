@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Egits\RefundChargeFee\Controller\Adminhtml\Refund;
+namespace Egits\RefundChargeFee\Controller\Adminhtml\Index;
 
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
