@@ -19,7 +19,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Message\ManagerInterface;
 
-class RefundCalculate extends \Magento\Backend\App\Action implements HttpPostActionInterface
+class RefundCalculate extends \Magento\Backend\App\Action
 {
 
     /**
@@ -53,6 +53,11 @@ class RefundCalculate extends \Magento\Backend\App\Action implements HttpPostAct
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * Refund fee configuration path
+     */
+    const CONFIG_PATH_REFUND_FEE = 'refundfee/general/fee_amount';
 
     /**
      * Constructor
@@ -94,15 +99,32 @@ class RefundCalculate extends \Magento\Backend\App\Action implements HttpPostAct
 
         if ($isModuleActive) {
             if ($isRefundable) {
+                $refundFee = $this->getRefundFee(); // Call a method to calculate the fee
 
                 $response = [
                     'success' => true,
                     'value' => $isRefundable,
-                    'message' => 'Value recieved.',
+                    'refund_fee' => $refundFee,
+                    'message' => 'Value recieved and fee calculated.',
                 ];
                 return $this->jsonResponse($response);
             }
+        } else {
+            $this->messageManager->addErrorMessage(__('Refund Fee Module is not enabled.'));
         }
+
+        return $this->jsonResponse([]); // Empty response if module not active
+    }
+
+    /**
+     * Retrieve the configured refund fee amount
+     *
+     * @return float
+     */
+    private function getRefundFee(): float
+    {
+        $feeAmount = (float) $this->scopeConfig->getValue(self::CONFIG_PATH_REFUND_FEE);
+        return $feeAmount;
     }
 
     /**
