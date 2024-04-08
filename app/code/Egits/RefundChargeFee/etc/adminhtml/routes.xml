@@ -2,11 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
 	<router id="admin">
 		<route id="refund_fee" frontName="refund_fee">
-<<<<<<< HEAD
 			<module name="Egits_RefundChargeFee" before="Magento_Backend" />
-=======
-			<module name="Egits_RefundChargeFee" />
->>>>>>> 52eb42da76b8c1fecc28ca0cd0573bfd715fd9a2
 		</route>
 	</router>
 </config>
