@@ -137,6 +137,7 @@ $isRefundable = $refundObj->getIsRefundable($orderId);
 
             <?= $block->getChildHtml('creditmemo_totals') ?>
 
+            <input type="hidden" id="refund_fee_value_input" name="refund_fee_value_input" value="">
 
             <?php if ($isRefundable) : ?>
                 <div class="admin__page-section-item-title">

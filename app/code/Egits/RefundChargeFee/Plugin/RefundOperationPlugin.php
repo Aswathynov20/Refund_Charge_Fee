@@ -1,4 +1,5 @@
 <?php
+
 namespace Egits\RefundChargeFee\Plugin;
 
 use Magento\Framework\App\RequestInterface;
@@ -23,15 +24,17 @@ class RefundOperationPlugin
     ) {
         $isModuleActive = (int) $this->scopeConfig->getValue('refundfee/general/enabled');
 
+        $value = $this->request->getParam('refund_fee_value_input');
+
         if ($isModuleActive) {
             $refundFee = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
             $refundAgeThreshold = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/age_threshold');
 
             $grandTotal = $result->getBaseGrandTotal();
             $refundFeeEnabled = $this->request->getParam('refund_fee_enabled');
-            
+
             if ($refundFeeEnabled) {
-                
+
                 $totalRefunded = $grandTotal - $refundFee;
                 $result->setTotalRefunded($totalRefunded);
             }

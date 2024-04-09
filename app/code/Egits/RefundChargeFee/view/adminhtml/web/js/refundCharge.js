@@ -34,6 +34,9 @@ require(["jquery", "mage/validation"], function ($) {
 
                         $("#refund_fee_amount").text(response.totalRefunded);
                         $("#refund_fee_amount").show(); // Show the refund fee amount span
+
+                        // Store the value of the checkbox in a hidden input field
+                        $("#refund_fee_value_input").val(value);
                     },
                     error: function (xhr, status, error) {
                         console.error("AJAX request failed:", error);
