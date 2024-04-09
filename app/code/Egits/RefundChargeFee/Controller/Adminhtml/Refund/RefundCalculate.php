@@ -11,11 +11,16 @@ namespace Egits\RefundChargeFee\Controller\Adminhtml\Refund;
 
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultInterface;
+// use Egits\RefundChargeFee\Api\RefundManagementInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\Pricing\Helper\Data as PriceHelper;
 use Magento\Framework\App\Response\Http;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Message\ManagerInterface;
 
@@ -26,6 +31,31 @@ class RefundCalculate extends \Magento\Backend\App\Action
      * @var ScopeConfigInterface
      */
     protected $scopeConfig;
+
+    /**
+     * @var PriceHelper
+     */
+    protected $priceHelper;
+
+    /**
+     * @var HttpRequest
+     */
+    protected $httpRequest;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    protected $orderRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    // /**
+    //  * @var RefundManagementInterface
+    //  */
+    // protected $refundManager;
 
     /**
      * @var Json
@@ -67,7 +97,12 @@ class RefundCalculate extends \Magento\Backend\App\Action
      * @param ScopeConfigInterface $scopeConfig
      * @param Http $http
      * @param Json $json
+     * @param OrderRepositoryInterface $orderRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param RefundManagementInterface $refundManager
      * @param ManagerInterface $messageManager
+     * @param HttpRequest $httpRequest
+     * @param PriceHelper $priceHelper
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -75,16 +110,26 @@ class RefundCalculate extends \Magento\Backend\App\Action
         RequestInterface $request,
         Http $http,
         Json $json,
+        OrderRepositoryInterface $orderRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        // RefundManagementInterface $refundManager,
         ScopeConfigInterface $scopeConfig,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        HttpRequest $httpRequest,
+        PriceHelper $priceHelper
     ) {
         parent::__construct($context);
         $this->logger = $logger;
         $this->request = $request;
         $this->http = $http;
         $this->serializer = $json;
+        $this->orderRepository = $orderRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        // $this->refundManager = $refundManager;
         $this->scopeConfig = $scopeConfig;
         $this->messageManager = $messageManager;
+        $this->httpRequest = $httpRequest;
+        $this->priceHelper = $priceHelper;
     }
 
     /**
@@ -96,15 +141,32 @@ class RefundCalculate extends \Magento\Backend\App\Action
     {
         $isModuleActive = (int) $this->scopeConfig->getValue('refundfee/general/enabled');
         $isRefundable = $this->request->getParam('value');
+        $orderId = (int) $this->request->getParam('orderId');
+
+        try {
+            // Retrieve the order using the orderId
+            $order = $this->orderRepository->get($orderId);
+        } catch (\Exception $e) {
+            // $this->messageManager->addErrorMessage(__('Error occurred while retrieving the order.'));
+            return $this->jsonResponse([]);
+        }
+
 
         if ($isModuleActive) {
             if ($isRefundable) {
                 $refundFee = $this->getRefundFee(); // Call a method to calculate the fee
 
+                $baseGrandTotal = $order->getBaseGrandTotal();
+
+                $totalRefunded = $baseGrandTotal - $refundFee;
+
+                $totalRefundedCurrency = $this->priceHelper->currency($totalRefunded, true, false);
+
                 $response = [
                     'success' => true,
                     'value' => $isRefundable,
                     'refund_fee' => $refundFee,
+                    'totalRefunded' => $totalRefundedCurrency,
                     'message' => 'Value recieved and fee calculated.',
                 ];
                 return $this->jsonResponse($response);
@@ -123,7 +185,7 @@ class RefundCalculate extends \Magento\Backend\App\Action
      */
     private function getRefundFee(): float
     {
-        $feeAmount = (float) $this->scopeConfig->getValue(self::CONFIG_PATH_REFUND_FEE);
+        $feeAmount = (float) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
         return $feeAmount;
     }
 

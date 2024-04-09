@@ -8,6 +8,9 @@ require(["jquery", "mage/validation"], function ($) {
             var formKey = $('[name="form_key"]').val();
             console.log(formKey);
 
+            var orderId = $(this).data("order-id");
+            console.log(orderId);
+
             var value = $(this).val();
             console.log("Checkbox value:", value);
 
@@ -18,17 +21,19 @@ require(["jquery", "mage/validation"], function ($) {
                     url: "/index.php/admin/refund_fee/refund/refundCalculate", // Corrected URL
                     type: "POST",
                     dataType: "json",
-                    // headers: {
-                    //     formKey: formKey,
-                    // },
                     data: {
+                        orderId: orderId,
                         value: value,
-                        form_key: window.FORM_KEY
+                        form_key: window.FORM_KEY,
                     },
                     success: function (response) {
                         console.log("AJAX request successful!");
                         // Handle success response
                         console.log(response);
+                        console.log(response.totalRefunded);
+
+                        $("#refund_fee_amount").text(response.totalRefunded);
+                        $("#refund_fee_amount").show(); // Show the refund fee amount span
                     },
                     error: function (xhr, status, error) {
                         console.error("AJAX request failed:", error);
@@ -38,6 +43,7 @@ require(["jquery", "mage/validation"], function ($) {
                 });
             } else {
                 console.log("Checkbox is not checked or value is not 1.");
+                $("#refund_fee_amount").hide(); // Hide the refund fee amount span
             }
         });
     });

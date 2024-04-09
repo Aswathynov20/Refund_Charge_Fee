@@ -15,12 +15,31 @@ $viewModel = $block->getData('viewModel');
 $itemsToRenderViewModel = $block->getData('itemsToRenderViewModel');
 $_items = $itemsToRenderViewModel->getItems();
 $commentText = $block->getCreditmemo()->getCommentText();
+
+$orderId = $block->getCreditmemo()->getOrderId();
 ?>
 
 <section class="admin__page-section">
     <div class="admin__page-section-title">
         <span class="title"><?= $block->escapeHtml(__('Items to Refund')) ?></span>
     </div>
+
+    <style>
+        .admin__page-section-item-title {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            /* Align to the right */
+            align-items: center;
+        }
+
+        .refund_fee_amount {
+            font-weight: bold;
+            /* Make the text bold */
+            font-size: 16px;
+            /* Increase the font size */
+        }
+    </style>
 
     <?php if (count($_items)) : ?>
         <div class="admin__table-wrapper">
@@ -105,14 +124,15 @@ $commentText = $block->getCreditmemo()->getCommentText();
             <div class="admin__page-section-item-title">
                 <span class="title"><?= $block->escapeHtml(__('Refund Totals')) ?></span>
             </div>
-         
+
             <?= $block->getChildHtml('creditmemo_totals') ?>
 
-             
+
             <div class="admin__page-section-item-title">
                 <span><b><?= $block->escapeHtml(__('Refund Fee')) ?></b></span>
-            </div> 
-            <input type="checkbox" name="refund_fee_enabled" id="refund_fee_enabled" value="1" />
+                <span id="refund_fee_amount" class="refund_fee_amount"></span>
+            </div>
+            <input type="checkbox" data-order-id=<?= $orderId ?> name="refund_fee_enabled" id="refund_fee_enabled" value="1" />
             <label for="refund_fee_enabled"><?= __('Apply Refund Fee') ?></label>
             <div class="totals-actions"><?= /* @noEscape */ $viewModel->getUpdateTotalsButton() ?></div>
             <div class="order-totals-actions">
