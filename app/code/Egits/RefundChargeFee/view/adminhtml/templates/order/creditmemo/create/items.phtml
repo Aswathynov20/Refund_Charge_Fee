@@ -9,6 +9,13 @@
 /** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 ?>
 <?php
+
+use Egits\RefundChargeFee\Block\Utilities;
+
+$refundObj = $block->getLayout()->createBlock(Utilities::class);
+
+$isRefundable = $refundObj->getIsRefundable();
+
 /** @var Magento\Sales\ViewModel\CreditMemo\Create\UpdateTotalsButton $viewModel */
 $viewModel = $block->getData('viewModel');
 /** @var Magento\Sales\ViewModel\CreditMemo\Create\ItemsToRender $itemsToRenderViewModel */

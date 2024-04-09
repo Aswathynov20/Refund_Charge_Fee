@@ -27,9 +27,12 @@ class Utilities extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * 
+     * This function checks if the order is eligible for a refund
+     *
+     * @return boolean
      */
     public function getIsRefundable()
     {
+        $threshold = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/age_threshold');
     }
 }
