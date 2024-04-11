@@ -48,9 +48,16 @@ class Utilities extends \Magento\Framework\View\Element\Template
         $order = $this->orderRepository->get($orderId);
         $orderCreatedAt = strtotime($order->getCreatedAt());
         $currentTime = time();
-        $differenceInDays = floor(($currentTime - $orderCreatedAt) / (60 * 60 * 24));
+        $differenceInHours = (int) (($currentTime - $orderCreatedAt) / (60 * 60));
 
-        if ($differenceInDays > $threshold) {
+        // Calculate the difference in days
+        $differenceInDays = floor($differenceInHours / 24);
+
+        // Calculate the remaining hours after one day
+        $remainingHours = (int) ($differenceInHours % 24);
+
+        // Check if the total time exceeds the threshold
+        if ($differenceInDays > $threshold || ($differenceInDays == $threshold && $remainingHours > 0)) {
             return false;
         } else {
             return true;
