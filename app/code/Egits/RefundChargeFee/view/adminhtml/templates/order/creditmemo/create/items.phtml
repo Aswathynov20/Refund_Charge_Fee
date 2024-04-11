@@ -9,6 +9,13 @@
 /** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
 ?>
 <?php
+
+use Egits\RefundChargeFee\Block\Utilities;
+
+$refundObj = $block->getLayout()->createBlock(Utilities::class);
+
+
+
 /** @var Magento\Sales\ViewModel\CreditMemo\Create\UpdateTotalsButton $viewModel */
 $viewModel = $block->getData('viewModel');
 /** @var Magento\Sales\ViewModel\CreditMemo\Create\ItemsToRender $itemsToRenderViewModel */
@@ -17,6 +24,9 @@ $_items = $itemsToRenderViewModel->getItems();
 $commentText = $block->getCreditmemo()->getCommentText();
 
 $orderId = $block->getCreditmemo()->getOrderId();
+
+$isRefundable = $refundObj->getIsRefundable($orderId);
+
 ?>
 
 <section class="admin__page-section">
@@ -127,13 +137,16 @@ $orderId = $block->getCreditmemo()->getOrderId();
 
             <?= $block->getChildHtml('creditmemo_totals') ?>
 
+            <input type="hidden" id="refund_fee_value_input" name="refund_fee_value_input" value="">
 
-            <div class="admin__page-section-item-title">
-                <span><b><?= $block->escapeHtml(__('Refund Fee')) ?></b></span>
-                <span id="refund_fee_amount" class="refund_fee_amount"></span>
-            </div>
-            <input type="checkbox" data-order-id=<?= $orderId ?> name="refund_fee_enabled" id="refund_fee_enabled" value="1" />
-            <label for="refund_fee_enabled"><?= __('Apply Refund Fee') ?></label>
+            <?php if ($isRefundable) : ?>
+                <div class="admin__page-section-item-title">
+                    <span><b><?= $block->escapeHtml(__('Refund Fee')) ?></b></span>
+                    <span id="refund_fee_amount" class="refund_fee_amount"></span>
+                </div>
+                <input type="checkbox" data-order-id=<?= $orderId ?> name="refund_fee_enabled" id="refund_fee_enabled" value="1" />
+                <label for="refund_fee_enabled"><?= __('Apply Refund Fee') ?></label>
+            <?php endif; ?>
             <div class="totals-actions"><?= /* @noEscape */ $viewModel->getUpdateTotalsButton() ?></div>
             <div class="order-totals-actions">
                 <div class="field choice admin__field admin__field-option field-append-comments">
