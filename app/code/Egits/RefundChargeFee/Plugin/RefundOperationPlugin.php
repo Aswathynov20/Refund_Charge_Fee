@@ -38,7 +38,8 @@ class RefundOperationPlugin
                 // $totalRefunded = $grandTotal - $refundFee;
                 $baseGrandTotal = $result->getBaseGrandTotal();
                 $totalRefunded = $baseGrandTotal / 100 * $refundFee;
-                $result->setTotalRefunded($totalRefunded);
+                $baseGrandTotal = $baseGrandTotal - $totalRefunded;
+                $result->setTotalRefunded( $baseGrandTotal);
             }
 
             return $result;
