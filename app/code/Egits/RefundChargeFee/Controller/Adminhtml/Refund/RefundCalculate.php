@@ -157,8 +157,9 @@ class RefundCalculate extends \Magento\Backend\App\Action
                 $refundFee = $this->getRefundFee(); // Call a method to calculate the fee
 
                 $baseGrandTotal = $order->getBaseGrandTotal();
+                $totalRefunded = $baseGrandTotal / 100 * $refundFee;
 
-                $totalRefunded = $baseGrandTotal - $refundFee;
+                // $totalRefunded = $baseGrandTotal - $refundFee;
 
                 $totalRefundedCurrency = $this->priceHelper->currency($totalRefunded, true, false);
 
