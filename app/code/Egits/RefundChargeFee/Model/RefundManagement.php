@@ -2,45 +2,17 @@
 
 namespace Egits\RefundChargeFee\Model;
 
-use Magento\Framework\App\Response\Http;
+use Egits\RefundChargeFee\Api\Data\OrderInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Serialize\Serializer\Json;
-use Magento\Framework\Encryption\EncryptorInterface as Encryptor;
-use Egits\RefundChargeFee\Api\RefundManagementInterface;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\App\Response\Http;
 
-class RefundManagement implements RefundManagementInterface
+class RefundManagement implements OrderInterface
 {
-
     /**
-     * @var Encryptor
+     * @var ScopeConfigInterface
      */
-    private $encryptor;
-
-    /**
-     * @var CustomerRegistry
-     */
-    private $customerRegistry;
-
-    /**
-     * @var Authentication
-     */
-    private $authentication;
-
-    /**
-     * @var CustomerRepositoryInterface
-     */
-    private $customerRepository;
-
-    /**
-     * @var Http
-     */
-    protected $http;
-
-    /**
-     * @var Email
-     */
-    protected $emailHelper;
+    protected $scopeConfig;
 
     /**
      * @var Json
@@ -48,40 +20,31 @@ class RefundManagement implements RefundManagementInterface
     protected $serializer;
 
     /**
-     * @var OtpInterface
+     * @var Http
      */
-    protected $otpModel;
+    protected $http;
 
     /**
-     * @var OtpRepositoryInterface
+     * @var string|null
      */
-    protected $otpRepository;
+    protected $refundFee;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    protected ScopeConfigInterface $scopeConfig;
-
-    /**
-     * TableRepository constructor.
+     * RefundManagement constructor.
      *
      * @param Json $json
-     * @param Encryptor $encryptor
-     * @param Http $http
      * @param ScopeConfigInterface $scopeConfig
+     * @param Http $http
      */
     public function __construct(
         Json $json,
-        Encryptor $encryptor,
-        Http $http,
         ScopeConfigInterface $scopeConfig,
+        Http $http
     ) {
         $this->serializer = $json;
-        $this->encryptor = $encryptor;
-        $this->http = $http;
         $this->scopeConfig = $scopeConfig;
+        $this->http = $http;
     }
-
 
     /**
      * Return module active status
@@ -90,12 +53,11 @@ class RefundManagement implements RefundManagementInterface
      */
     public function getModuleIsActive()
     {
-        return
-            (int) $this->scopeConfig->getValue('refundfee/general/enabled');
+        return (int) $this->scopeConfig->getValue('refundfee/general/enabled');
     }
 
     /**
-     * Build an return a json response
+     * Build and return a JSON response
      *
      * @param string|mixed $response
      * @return string|mixed
@@ -111,11 +73,37 @@ class RefundManagement implements RefundManagementInterface
     }
 
     /**
-     * Function calculates the amount to be refunded
+     * Get Refund Fee
      *
-     * @return 
+     * @return string|null
      */
-    public function calculateRefund()
+    public function getRefundFee()
     {
+        return $this->refundFee;
     }
+
+    /**
+     * Set Refund Fee
+     *
+     * @param string|null $refundFee
+     * @return $this
+     */
+    public function setRefundFee($refundFee)
+    {
+        $this->refundFee = $refundFee;
+        return $this;
+    }
+    // /**
+    //  * Function calculates the amount to be refunded
+    //  *
+    //  * @return void
+    //  */
+    // public function calculateRefund()
+    // {
+    //     // Placeholder for refund calculation logic
+    //     // You should implement your refund calculation logic here
+    //     // For example:
+    //     // $totalRefundAmount = ...; // Calculate the total refund amount
+    //     // $this->setRefundFee($totalRefundAmount); // Set the refund fee
+    // }
 }
