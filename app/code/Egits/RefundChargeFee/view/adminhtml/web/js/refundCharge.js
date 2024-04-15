@@ -1,11 +1,11 @@
-require(["jquery", "mage/validation"], function ($) {
+require(["jquery", "mage/validation"], function ($ , validation) {
     $(document).ready(function () {
         console.log("Document ready!");
 
         $("#refund_fee_enabled").on("change", function () {
             console.log("Checkbox state changed!");
 
-            var formKey = $('[name="form_key"]').val();
+            var formKey = $('[name="form_key"]').val(); // Find CSRF token in the page source
             console.log(formKey);
 
             var orderId = $(this).data("order-id");
@@ -17,14 +17,15 @@ require(["jquery", "mage/validation"], function ($) {
             if ($(this).is(":checked") && value === "1") {
                 console.log("Checkbox is checked and value is 1.");
 
+                // Include CSRF token directly in the AJAX request
                 $.ajax({
-                    url: "/index.php/admin/refund_fee/refund/refundCalculate", // Corrected URL
+                    url: "/index.php/admin/refund_fee/refund/refundCalculate",
                     type: "POST",
                     dataType: "json",
                     data: {
                         orderId: orderId,
                         value: value,
-                        form_key: window.FORM_KEY,
+                        form_key: formKey, // Include CSRF token
                     },
                     success: function (response) {
                         console.log("AJAX request successful!");

@@ -1,9 +1,9 @@
 <?php
-
 namespace Egits\RefundChargeFee\Plugin;
 
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Sales\Api\CreditmemoRepositoryInterface;
 
 /**
  * Plugin for modifying refund operation behavior.
@@ -21,28 +21,36 @@ class RefundOperationPlugin
     protected $scopeConfig;
 
     /**
+     * @var CreditmemoRepositoryInterface
+     */
+    protected $creditmemoRepository;
+
+    /**
      * Constructor.
      *
      * @param RequestInterface $request
      * @param ScopeConfigInterface $scopeConfig
+     * @param CreditmemoRepositoryInterface $creditmemoRepository
      */
     public function __construct(
         RequestInterface $request,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        CreditmemoRepositoryInterface $creditmemoRepository
     ) {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
+        $this->creditmemoRepository = $creditmemoRepository;
     }
 
     /**
      * Plugin to modify refund operation behavior.
      *
-     * @param \Magento\Sales\Model\Order\Creditmemo\RefundOperation $subject
+     * @param mixed $subject
      * @param mixed $result
      * @return mixed
      */
-    public function afterExecute(
-        \Magento\Sales\Model\Order\Creditmemo\RefundOperation $subject,
+    public function afterRefund(
+        $subject,
         $result
     ) {
         // Check if the refund fee module is enabled
@@ -54,8 +62,7 @@ class RefundOperationPlugin
         if ($isModuleActive) {
             // Get refund fee and age threshold configuration values
             $refundFee = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
-            $refundAgeThreshold = (int) $this->scopeConfig->
-                                                    getValue('refundfee/refund_charge_fee_configuration/age_threshold');
+            $refundAgeThreshold = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/age_threshold');
 
             // Get the grand total of the credit memo
             $grandTotal = $result->getBaseGrandTotal();

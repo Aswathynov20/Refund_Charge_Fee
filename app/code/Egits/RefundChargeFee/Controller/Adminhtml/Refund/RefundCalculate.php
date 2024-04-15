@@ -180,26 +180,6 @@ class RefundCalculate extends \Magento\Backend\App\Action
         $feeAmount = (float) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
         return $feeAmount;
     }
-
-    /**
-     * Store the refund fee in the order as a custom attribute
-     *
-     * @param int $orderId
-     * @param float $refundFee
-     * @return void
-     */
-    // protected function storeRefundFee(int $orderId, float $refundFee)
-    // {
-    //     try {
-    //         $order = $this->orderRepository->get($orderId);
-    //         $order->setData('refund_fee', $refundFee); // Store refund fee in a custom attribute
-    //         $this->orderRepository->save($order);
-    //     } catch (\Exception $e) {
-    //         $this->logger->error($e->getMessage());
-    //         $this->messageManager->addErrorMessage(__('Failed to store refund fee for order #%1.', $orderId));
-    //     }
-    // }
-
     /**
      * Store the total refunded amount in the order
      *

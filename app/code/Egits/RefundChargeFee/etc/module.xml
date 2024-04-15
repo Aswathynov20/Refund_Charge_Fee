@@ -3,6 +3,7 @@
     <module name="Egits_RefundChargeFee" setup_version="1.0.0" >
         <sequence>
             <module name="Magento_Backend"/>
+            <module name="Magento_sales"/>
         </sequence>
     </module>
 </config>
