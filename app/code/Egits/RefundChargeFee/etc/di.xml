@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-	<type name="Magento\Sales\Model\Order\Creditmemo\RefundOperation">
-		<plugin name="Egits_refund_plugin" type="Egits\RefundChargeFee\Plugin\RefundOperationPlugin" sortOrder="1" />
-	</type>
+    <type name="Magento\Sales\Model\Order\Creditmemo\RefundOperation">
+        <plugin name="Egits_refund_plugin" type="Egits\RefundChargeFee\Plugin\RefundOperationPlugin" sortOrder="1" />
+    </type>
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Totals" type="Egits\RefundChargeFee\Block\Adminhtml\Order\Totals" />
+    <preference for="Egits\RefundChargeFee\Api\Data\OrderInterface" type="Egits\RefundChargeFee\Model\Order\Order"/>
 </config>

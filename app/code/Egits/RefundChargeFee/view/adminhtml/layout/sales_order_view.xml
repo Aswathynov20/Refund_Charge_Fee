@@ -1,0 +1,8 @@
+<!-- File: app/code/Egits/RefundChargeFee/view/adminhtml/layout/sales_order_view.xml -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="order_totals">
+            <block class="Egits\RefundChargeFee\Block\Adminhtml\Order\Totals" name="custom_order_totals" template="Egits_RefundChargeFee::order/totals.phtml" after="grand_total" />
+        </referenceContainer>
+    </body>
+</page>

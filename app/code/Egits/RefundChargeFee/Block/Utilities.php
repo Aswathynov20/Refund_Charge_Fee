@@ -8,7 +8,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 /**
  * Class Utilities is used to hold some common functions
  *
- * @param Egits\RefundChargeFee\Block
  */
 class Utilities extends \Magento\Framework\View\Element\Template
 {
@@ -40,7 +39,7 @@ class Utilities extends \Magento\Framework\View\Element\Template
      * This function checks if the order is eligible for a refund
      *
      * @param int $orderId
-     * @return boolean
+     * @return bool
      */
     public function getIsRefundable($orderId)
     {
@@ -62,5 +61,16 @@ class Utilities extends \Magento\Framework\View\Element\Template
         } else {
             return true;
         }
+    }
+
+    /**
+     * Get the refund fee amount from configuration
+     *
+     * @return float
+     */
+    public function getRefundFee(): float
+    {
+        $feeAmount = (float) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
+        return $feeAmount;
     }
 }
