@@ -1,24 +1,28 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
+        <tab id="refundfee" translate="label" sortOrder="200">
+            <label>EGITS</label>
+        </tab>
         <section id="refundfee" translate="label" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Refund Fee Configuration</label>
-            <tab>sales</tab>
-            <resource>Egits_RefundChargeFee::config_refundfee</resource>
+            <class>separator-top</class>
+            <label>Refund Charge Fee</label>
+            <tab>refundfee</tab>
+            <resource>Egits_RefundChargeFee::configuration</resource>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Configuration</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Refund Fee</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                </group>
-                <group id="refund_charge_fee_configuration" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            </group>
+            <group id="refund_charge_fee_configuration" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Refund Charge Fee Configuration</label>
-                    <field id="fee_amount" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="fee_amount" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Fee Amount</label>
                     <validate>validate-alphanum-with-symbols</validate> <!-- Updated validation rule -->
                 </field>
-                 <field id="age_threshold" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="age_threshold" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Age Threshold (in days)</label>
                     <validate>validate-digits</validate>
                 </field>
