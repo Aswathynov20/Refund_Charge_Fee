@@ -20,10 +20,12 @@
                 <label>Refund Charge Fee Configuration</label>
                 <field id="fee_amount" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Fee Amount</label>
-                    <validate>validate-alphanum-with-symbols</validate> <!-- Updated validation rule -->
+                    <comment>In percentage (%).</comment>
+                    <validate>validate-fee-amount</validate> <!-- Updated validation rule -->
                 </field>
                 <field id="age_threshold" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Age Threshold (in days)</label>
+                    <label>Age Threshold </label>
+                    <comment>In days</comment>
                     <validate>validate-digits</validate>
                 </field>
             </group>

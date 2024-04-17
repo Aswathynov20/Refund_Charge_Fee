@@ -1,4 +1,5 @@
 <?php
+
 namespace Egits\RefundChargeFee\Plugin;
 
 use Magento\Framework\App\RequestInterface;
@@ -62,25 +63,24 @@ class RefundOperationPlugin
         $subject,
         $result
     ) {
-        // Check if the refund fee module is enabled
         $isModuleActive = (int) $this->scopeConfig->getValue('refundfee/general/enabled');
 
-        // Get the value of refund_fee_value_input parameter from request
         $value = $this->request->getParam('refund_fee_value_input');
 
         if ($isModuleActive) {
-            // Get refund fee and age threshold configuration values
             $refundFee = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
+
+            if ($refundFee > 100) {
+                $refundFee = 100;
+            }
+
             $refundAgeThreshold = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/age_threshold');
 
-            // Get the grand total of the credit memo
             $grandTotal = $result->getBaseGrandTotal();
 
-            // Check if refund fee is enabled
             $refundFeeEnabled = $this->request->getParam('refund_fee_enabled');
 
             if ($refundFeeEnabled) {
-                // Calculate the total refunded amount based on refund fee percentage
                 $baseGrandTotal = $result->getBaseGrandTotal();
                 $totalRefunded = $baseGrandTotal / 100 * (float) $refundFee;
                 $baseGrandTotal = $baseGrandTotal - $totalRefunded;

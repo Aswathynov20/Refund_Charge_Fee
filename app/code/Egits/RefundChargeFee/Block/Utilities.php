@@ -45,21 +45,21 @@ class Utilities extends \Magento\Framework\View\Element\Template
     {
         $threshold = (int) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/age_threshold');
         $order = $this->orderRepository->get($orderId);
+        $totalPaid = (int) $order->getTotalPaid();
         $orderCreatedAt = strtotime($order->getCreatedAt());
         $currentTime = time();
         $differenceInHours = (int) (($currentTime - $orderCreatedAt) / (60 * 60));
 
-        // Calculate the difference in days
         $differenceInDays = floor($differenceInHours / 24);
 
-        // Calculate the remaining hours after one day
         $remainingHours = (int) ($differenceInHours % 24);
 
-        // Check if the total time exceeds the threshold
-        if ($differenceInDays > $threshold || ($differenceInDays == $threshold && $remainingHours > 0)) {
-            return false;
-        } else {
-            return true;
+        if ($totalPaid != 0) {
+            if ($differenceInDays > $threshold || ($differenceInDays == $threshold && $remainingHours > 0)) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
@@ -71,6 +71,11 @@ class Utilities extends \Magento\Framework\View\Element\Template
     public function getRefundFee(): float
     {
         $feeAmount = (float) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
+
+        if ($feeAmount > 100) {
+            $feeAmount = 100;
+        }
+
         return $feeAmount;
     }
 }

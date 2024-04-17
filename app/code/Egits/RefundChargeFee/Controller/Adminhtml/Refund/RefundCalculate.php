@@ -164,6 +164,9 @@ class RefundCalculate extends \Magento\Backend\App\Action
     public function getRefundFee(): float
     {
         $feeAmount = (float) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
+        if ($feeAmount > 100) {
+            $feeAmount = 100;
+        }
         return $feeAmount;
     }
 
