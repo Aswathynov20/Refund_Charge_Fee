@@ -7,7 +7,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\App\Response\Http;
 
-class RefundManagement implements OrderInterface
+class RefundManagement
 {
     /**
      * @var ScopeConfigInterface
@@ -72,27 +72,27 @@ class RefundManagement implements OrderInterface
         );
     }
 
-    /**
-     * Get Refund Fee
-     *
-     * @return string|null
-     */
-    public function getRefundFee()
-    {
-        return $this->refundFee;
-    }
+    // /**
+    //  * Get Refund Fee
+    //  *
+    //  * @return string|null
+    //  */
+    // public function getRefundFee()
+    // {
+    //     return $this->refundFee;
+    // }
 
-    /**
-     * Set Refund Fee
-     *
-     * @param string|null $refundFee
-     * @return $this
-     */
-    public function setRefundFee($refundFee)
-    {
-        $this->refundFee = $refundFee;
-        return $this;
-    }
+    // /**
+    //  * Set Refund Fee
+    //  *
+    //  * @param string|null $refundFee
+    //  * @return $this
+    //  */
+    // public function setRefundFee($refundFee)
+    // {
+    //     $this->refundFee = $refundFee;
+    //     return $this;
+    // }
     // /**
     //  * Function calculates the amount to be refunded
     //  *

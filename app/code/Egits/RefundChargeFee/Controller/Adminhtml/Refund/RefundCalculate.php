@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Copyright ©  All rights reserved.
- * See COPYING.txt for license details.
- */
-
-declare(strict_types=1);
-
 namespace Egits\RefundChargeFee\Controller\Adminhtml\Refund;
 
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -22,6 +15,7 @@ use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Backend\App\Action\Context;
+use Egits\RefundChargeFee\Model\Order;
 
 class RefundCalculate extends \Magento\Backend\App\Action
 {
@@ -140,15 +134,12 @@ class RefundCalculate extends \Magento\Backend\App\Action
             if ($isRefundable) {
                 $refundFee = $this->getRefundFee(); // Retrieve the refund fee from config
 
-                // Store the refund fee in the order
-                // $this->storeRefundFee($orderId, $refundFee);
-
                 // Calculate total refunded amount
                 $baseGrandTotal = $order->getBaseGrandTotal();
                 $totalRefunded = $baseGrandTotal / 100 * $refundFee;
 
                 // Store the calculated refund amount in the order
-                $this->storeTotalRefunded($orderId, $totalRefunded);
+                $this->storeTotalRefunded($order, $totalRefunded);
 
                 // Format total refunded amount as currency
                 $totalRefundedCurrency = $this->priceHelper->currency($totalRefunded, true, false);
@@ -180,25 +171,27 @@ class RefundCalculate extends \Magento\Backend\App\Action
         $feeAmount = (float) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
         return $feeAmount;
     }
+    
     /**
      * Store the total refunded amount in the order
      *
-     * @param int $orderId
+     * @param \Magento\Sales\Model\Order $order
      * @param float $totalRefunded
      * @return void
      */
-    protected function storeTotalRefunded(int $orderId, float $totalRefunded)
+    protected function storeTotalRefunded(\Magento\Sales\Model\Order $order, float $totalRefunded)
     {
         try {
-            $order = $this->orderRepository->get($orderId);
-            $order->setData('refund_fee', $totalRefunded); // Store total refunded amount in a custom attribute
+            // Set the total refunded amount using a custom setter method
+            $order->setRefundFee($totalRefunded);
             $this->orderRepository->save($order);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $this->messageManager->addErrorMessage(__('Failed to store total 
-                            refunded amount for order #%1.', $orderId));
+            $this->messageManager->addErrorMessage(__('Failed to store total refunded amount for order #%1.', $order->getId()));
         }
     }
+
+    
 
     /**
      * Build and return a json response

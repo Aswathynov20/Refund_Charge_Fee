@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- Define a plugin for an appropriate interface -->
-    <type name="Magento\Sales\Api\CreditmemoManagementInterface">
+    <type name="Magento\Sales\Model\Order\Creditmemo\RefundOperation">
         <plugin name="Egits_refund_plugin" type="Egits\RefundChargeFee\Plugin\RefundOperationPlugin" sortOrder="1" />
     </type>
     <!-- Adjust other preferences as needed -->

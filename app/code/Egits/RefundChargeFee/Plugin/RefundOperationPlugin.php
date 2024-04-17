@@ -4,6 +4,7 @@ namespace Egits\RefundChargeFee\Plugin;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 /**
  * Plugin for modifying refund operation behavior.
@@ -14,6 +15,11 @@ class RefundOperationPlugin
      * @var RequestInterface
      */
     protected $request;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    protected $orderRepository;
 
     /**
      * @var ScopeConfigInterface
@@ -30,15 +36,18 @@ class RefundOperationPlugin
      *
      * @param RequestInterface $request
      * @param ScopeConfigInterface $scopeConfig
+     * @param OrderRepositoryInterface $orderRepository
      * @param CreditmemoRepositoryInterface $creditmemoRepository
      */
     public function __construct(
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
+        OrderRepositoryInterface $orderRepository,
         CreditmemoRepositoryInterface $creditmemoRepository
     ) {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
+        $this->orderRepository = $orderRepository;
         $this->creditmemoRepository = $creditmemoRepository;
     }
 
@@ -49,7 +58,7 @@ class RefundOperationPlugin
      * @param mixed $result
      * @return mixed
      */
-    public function afterRefund(
+    public function afterExecute(
         $subject,
         $result
     ) {
@@ -73,9 +82,10 @@ class RefundOperationPlugin
             if ($refundFeeEnabled) {
                 // Calculate the total refunded amount based on refund fee percentage
                 $baseGrandTotal = $result->getBaseGrandTotal();
-                $totalRefunded = $baseGrandTotal / 100 * $refundFee;
+                $totalRefunded = $baseGrandTotal / 100 * (float) $refundFee;
                 $baseGrandTotal = $baseGrandTotal - $totalRefunded;
                 $result->setTotalRefunded($baseGrandTotal);
+                $this->orderRepository->save($result);
             }
 
             return $result;

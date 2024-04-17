@@ -1,10 +1,11 @@
 <?php
-namespace Egits\RefundChargeFee\Model\Order;
 
-use Magento\Framework\Model\AbstractModel;
+namespace Egits\RefundChargeFee\Model;
+
 use Egits\RefundChargeFee\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order as MagentoOrder;
 
-class Order extends AbstractModel implements OrderInterface
+class Order extends MagentoOrder implements OrderInterface
 {
     /**
      * Get Refund Fee
@@ -13,17 +14,18 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getRefundFee()
     {
-        return $this->getData(self::REFUND_FEE);
+        // Your custom logic to get refund fee
     }
 
     /**
      * Set Refund Fee
      *
-     * @param string|null $refundFee
+     * @param float $refundFee
      * @return $this
      */
     public function setRefundFee($refundFee)
     {
-        return $this->setData(self::REFUND_FEE, $refundFee);
+        $this->setData('refund_fee', $refundFee);
+        return $this;
     }
 }
