@@ -1,8 +1,8 @@
-require(["jquery", "mage/validation"], function ($ , validation) {
+require(["jquery", "mage/validation"], function ($, validation) {
     $(document).ready(function () {
         console.log("Document ready!");
 
-        $("#refund_fee_enabled").on("change", function () {
+        $("#refund_fee_enabled").on("click", function () {
             console.log("Checkbox state changed!");
 
             var formKey = $('[name="form_key"]').val(); // Find CSRF token in the page source

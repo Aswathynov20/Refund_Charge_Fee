@@ -24,7 +24,7 @@ class RefundCalculate extends \Magento\Backend\App\Action
      * @var LoggerInterface
      */
     protected $logger;
-    
+
     /**
      * @var RequestInterface
      */
@@ -39,7 +39,7 @@ class RefundCalculate extends \Magento\Backend\App\Action
      * @var Http
      */
     protected $http;
-    
+
     /**
      * @var Json
      */
@@ -55,11 +55,11 @@ class RefundCalculate extends \Magento\Backend\App\Action
      */
     protected $searchCriteriaBuilder;
 
-     /**
-      * @var ManagerInterface
-      */
+    /**
+     * @var ManagerInterface
+     */
     protected $messageManager;
-     
+
     /**
      * @var HttpRequest
      */
@@ -123,10 +123,8 @@ class RefundCalculate extends \Magento\Backend\App\Action
         $orderId = (int) $this->request->getParam('orderId');
 
         try {
-            // Retrieve the order using the orderId
             $order = $this->orderRepository->get($orderId);
         } catch (\Exception $e) {
-            // $this->messageManager->addErrorMessage(__('Error occurred while retrieving the order.'));
             return $this->jsonResponse([]);
         }
 
@@ -134,14 +132,11 @@ class RefundCalculate extends \Magento\Backend\App\Action
             if ($isRefundable) {
                 $refundFee = $this->getRefundFee(); // Retrieve the refund fee from config
 
-                // Calculate total refunded amount
                 $baseGrandTotal = $order->getBaseGrandTotal();
                 $totalRefunded = $baseGrandTotal / 100 * $refundFee;
 
-                // Store the calculated refund amount in the order
                 $this->storeTotalRefunded($order, $totalRefunded);
 
-                // Format total refunded amount as currency
                 $totalRefundedCurrency = $this->priceHelper->currency($totalRefunded, true, false);
 
                 $response = [
@@ -171,7 +166,7 @@ class RefundCalculate extends \Magento\Backend\App\Action
         $feeAmount = (float) $this->scopeConfig->getValue('refundfee/refund_charge_fee_configuration/fee_amount');
         return $feeAmount;
     }
-    
+
     /**
      * Store the total refunded amount in the order
      *
@@ -182,7 +177,6 @@ class RefundCalculate extends \Magento\Backend\App\Action
     protected function storeTotalRefunded(\Magento\Sales\Model\Order $order, float $totalRefunded)
     {
         try {
-            // Set the total refunded amount using a custom setter method
             $order->setRefundFee($totalRefunded);
             $this->orderRepository->save($order);
         } catch (\Exception $e) {
@@ -190,8 +184,6 @@ class RefundCalculate extends \Magento\Backend\App\Action
             $this->messageManager->addErrorMessage(__('Failed to store total refunded amount for order #%1.', $order->getId()));
         }
     }
-
-    
 
     /**
      * Build and return a json response

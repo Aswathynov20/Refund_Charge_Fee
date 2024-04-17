@@ -71,39 +71,4 @@ class RefundManagement
             $this->serializer->serialize($response)
         );
     }
-
-    // /**
-    //  * Get Refund Fee
-    //  *
-    //  * @return string|null
-    //  */
-    // public function getRefundFee()
-    // {
-    //     return $this->refundFee;
-    // }
-
-    // /**
-    //  * Set Refund Fee
-    //  *
-    //  * @param string|null $refundFee
-    //  * @return $this
-    //  */
-    // public function setRefundFee($refundFee)
-    // {
-    //     $this->refundFee = $refundFee;
-    //     return $this;
-    // }
-    // /**
-    //  * Function calculates the amount to be refunded
-    //  *
-    //  * @return void
-    //  */
-    // public function calculateRefund()
-    // {
-    //     // Placeholder for refund calculation logic
-    //     // You should implement your refund calculation logic here
-    //     // For example:
-    //     // $totalRefundAmount = ...; // Calculate the total refund amount
-    //     // $this->setRefundFee($totalRefundAmount); // Set the refund fee
-    // }
 }
